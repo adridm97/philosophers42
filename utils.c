@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/25 11:00:58 by aduenas-          #+#    #+#             */
+/*   Updated: 2024/02/28 20:46:56 by aduenas-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 int check_args(t_arguments *arguments, char **argv)
@@ -18,4 +30,26 @@ int check_args(t_arguments *arguments, char **argv)
     arguments->num_of_eat = -1;
   }
   return (0);
+}
+
+long long	ft_gettime(void)
+{
+	struct timeval	t;
+
+	gettimeofday(&t, NULL);
+	return ((t.tv_sec * 1000) + (t.tv_usec / 1000));
+}
+
+void	*ft_thread(void *philo)
+{
+	t_philo	*philosopher;
+	t_arguments	*arguments;
+
+	philosopher = (t_philo *)philo;
+	if (philosopher->id % 2 == 0)
+		usleep(10000);
+	while (arguments->died && !arguments->num_of_eat)
+	{
+		philo_eat(philosopher);
+	}
 }

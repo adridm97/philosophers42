@@ -1,10 +1,22 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/02/25 11:02:29 by aduenas-          #+#    #+#              #
+#    Updated: 2024/02/28 20:12:23 by aduenas-         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 CC = gcc
 NAME = philo
 HEADER = philo.h
 CFLAGS = -Wall -Wextra -Werror -g
 
 
-SRC = main.c inits.c utils.c ft_functions.c
+SRC = main.c inits.c utils.c ft_functions.c philo_functions.c
 
 OBJS = ${SRC:.c=.o}
 

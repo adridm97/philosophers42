@@ -1,49 +1,54 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   inits.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/25 11:01:02 by aduenas-          #+#    #+#             */
+/*   Updated: 2024/02/25 16:25:58 by aduenas-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "philo.h"
 
-int init_mutex(t_arguments *arguments)
+//se asigna espacio de memoria a los philosophers y 
+//se le asigna su tenedor izquierdo y su tenedor izquierdo es una llamada al
+//izquierdo del philosopher de su izquierda.
+int	init_philosophers(t_arguments *args)
 {
-  int i;
+	int	i;
 
-  i = arguments->total_philos;
-  while(--i >= 0)
-  {
-    if(pthread_mutex_init(&(arguments->total_forks[i]), NULL))
-      return (1);
-  }
-	return (0);
-}
-
-int	init_philosophers(t_arguments *arguments)
-{
-	int i;
-
-	i = arguments->total_philos;
-	while (--i >= 0)
+	i = -1;
+	args->philos = (t_philo *)malloc(sizeof(t_philo) * args->total_philos);
+	if (!args->philos)
+		return (1);
+	while (++i < args->total_philos)
 	{
-		arguments->philo[i].id = i;
-		arguments->philo[i].left_fork = i;
-		arguments->philo[i].right_fork = (i + 1) % arguments->total_philos;
+		args->philos[i].id = i + 1;
+		pthread_mutex_init(&args->philos->right_fork, NULL);
+	}
+	if (args->total_philos > 1)
+	{
+		i = 0;
+		if(i == 0)
+			args->philos[i].left_fork = &args->philos[args->total_philos].right_fork;
+		while (++i < args->total_philos)
+			args->philos[i].left_fork = &args->philos[i - 1].right_fork;
 	}
 	return (0);
 }
 
-/*void init_forks(t_arguments *arguments)
+int	start_threads(t_arguments *args)
 {
-  int i;
-  
-  i = -1;
-  while(++i < arguments->total_philos)
-  {
-    pthread_mutex_init(&arguments->total_forks[i], NULL);
-  }
-  i = -1;
-  while(++i < arguments->total_philos)
-  {
-    if (i == 0)
-			arguments->philo[i].right_fork = &arguments->total_forks[arguments->total_philos - 1];
-		else
-			arguments->philo[i].right_fork = &arguments->total_forks[i - 1];
-		arguments->philo[i].left_fork = &arguments->total_forks[i % arguments->total_philos];
-  }
-}*/
+	int	i;
+
+	i = 0;
+	while (i < args->total_philos)
+	{
+		if (pthread_create(&(args->philos[i]), NULL, ft_thread, &(args->philos[i])))
+			return (1);
+		args->philos[i].time_last_meal = ft_gettime();
+		i++;
+	}
+}
