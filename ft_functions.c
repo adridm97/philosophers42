@@ -36,3 +36,14 @@ int ft_atoi(char *str)
   }
   return (res * sign);
 }
+
+void  print_action(char *str, int id, t_arguments *args)
+{
+  pthread_mutex_lock(&(args->writing));
+  if (!(args->died))
+  {
+    printf("%lli ", ft_gettime() - args->first_timestamp);
+    printf("%i ", id);
+    printf("%s\n", str);
+  }
+}

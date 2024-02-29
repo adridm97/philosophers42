@@ -26,8 +26,12 @@ int	init_philosophers(t_arguments *args)
 	while (++i < args->total_philos)
 	{
 		args->philos[i].id = i + 1;
-		pthread_mutex_init(&args->philos->right_fork, NULL);
+		args->philos[i].arguments = args;
+		if (pthread_mutex_init(&args->philos->right_fork, NULL))
+		return (1);
 	}
+	if (pthread_mutex_init(&args->writing, NULL))
+		return (1);
 	if (args->total_philos > 1)
 	{
 		i = 0;
@@ -42,13 +46,17 @@ int	init_philosophers(t_arguments *args)
 int	start_threads(t_arguments *args)
 {
 	int	i;
+	//t_philo *philo;
 
 	i = 0;
+	//philo = args->philos;
+	args->first_timestamp = ft_gettime();
 	while (i < args->total_philos)
 	{
-		if (pthread_create(&(args->philos[i]), NULL, ft_thread, &(args->philos[i])))
+		if (pthread_create(&(args->philos[i].tread_id), NULL, ft_thread, &(args->philos[i])))
 			return (1);
 		args->philos[i].time_last_meal = ft_gettime();
 		i++;
 	}
+	return (0);
 }

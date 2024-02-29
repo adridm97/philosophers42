@@ -16,25 +16,30 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <pthread.h>
+# include <sys/time.h>
+# include <unistd.h>
 
 typedef struct s_philo
 {
-  int				id;
-  pthread_mutex_t	*left_fork;
-  pthread_mutex_t	right_fork;
-  long				time_last_meal;
-  t_arguments		*arguments;
+  int				            id;
+  pthread_mutex_t	      *left_fork;
+  pthread_mutex_t	      right_fork;
+  long				          time_last_meal;
+  struct s_arguments		*arguments;
+  pthread_t             tread_id;
 }	t_philo;
 
 typedef struct s_arguments
 {
-  int		total_philos;
-  long		time_to_eat;
-  long		time_to_die;
-  long		time_to_sleep;
-  int		num_of_eat;
-  int		died;
-  t_philo	*philos;
+  int		          total_philos;
+  long		        time_to_eat;
+  long		        time_to_die;
+  long		        time_to_sleep;
+  int		          num_of_eat;
+  int		          died;
+  long long       first_timestamp;
+  pthread_mutex_t writing;
+  t_philo	        *philos;
 }	t_arguments;
 
 //-----inits.c------
@@ -48,10 +53,14 @@ void	*ft_thread(void *philosopher);
 
 int	check_args(t_arguments *arguments, char **argv);
 long long	ft_gettime(void);
+
+//-----philo_functions.c------
+
 void		philo_eat(t_philo *philo);
 
 //-----ft_functions.c-------
 
 int	ft_atoi(char *str);
+void  print_action(char *str, int id, t_arguments *args);
 
 #endif

@@ -10,10 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "philo.h"
+
 void	philo_eat(t_philo *philo)
 {
 	t_arguments	*args;
-
-	pthread_mutex_lock(&(philo.left_fork));
-	
+	args = philo->arguments;
+	pthread_mutex_lock(philo->left_fork);
+	print_action("has taken a fork", philo->id, args);
 }

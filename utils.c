@@ -18,6 +18,7 @@ int check_args(t_arguments *arguments, char **argv)
   arguments->time_to_die = ft_atoi(argv[2]);
   arguments->time_to_eat = ft_atoi(argv[3]);
   arguments->time_to_sleep = ft_atoi(argv[4]);
+  arguments->died = 0;
   if(arguments->total_philos < 1 || arguments->time_to_die < 0 || arguments->time_to_eat < 0 || arguments->time_to_sleep < 0)
     return (1);
   if (argv[5])
@@ -46,10 +47,12 @@ void	*ft_thread(void *philo)
 	t_arguments	*arguments;
 
 	philosopher = (t_philo *)philo;
+  arguments = philosopher->arguments;
 	if (philosopher->id % 2 == 0)
 		usleep(10000);
 	while (arguments->died && !arguments->num_of_eat)
 	{
 		philo_eat(philosopher);
 	}
+  return (NULL);
 }
