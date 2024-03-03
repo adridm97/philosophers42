@@ -6,7 +6,7 @@
 /*   By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 11:03:20 by aduenas-          #+#    #+#             */
-/*   Updated: 2024/02/28 21:16:35 by aduenas-         ###   ########.fr       */
+/*   Updated: 2024/03/03 21:27:26 by aduenas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,38 +21,43 @@
 
 typedef struct s_philo
 {
-  int				            id;
-  pthread_mutex_t	      *left_fork;
-  pthread_mutex_t	      right_fork;
-  long				          time_last_meal;
+  int						id;
+  int						number_of_eats;
+  pthread_mutex_t			*left_fork;
+  pthread_mutex_t			right_fork;
+  long						time_last_meal;
   struct s_arguments		*arguments;
-  pthread_t             tread_id;
+  pthread_t					thread_id;
 }	t_philo;
 
 typedef struct s_arguments
 {
-  int		          total_philos;
-  long		        time_to_eat;
-  long		        time_to_die;
-  long		        time_to_sleep;
-  int		          num_of_eat;
-  int		          died;
-  long long       first_timestamp;
-  pthread_mutex_t writing;
-  t_philo	        *philos;
+  int				total_philos;
+  long				time_to_eat;
+  long				time_to_die;
+  long				time_to_sleep;
+  int				total_eat;
+  int				died;
+  int				all_eat;
+  long long			first_timestamp;
+  pthread_mutex_t 	writing;
+  pthread_mutex_t	meal;
+  t_philo			*philos;
 }	t_arguments;
 
 //-----inits.c------
 
-int	init_mutex(t_arguments *arguments);
 int	init_philosophers(t_arguments *arguments);
 int	start_threads(t_arguments *arguments);
-void	*ft_thread(void *philosopher);
+void	death_checker(t_arguments *arguments, t_philo *philo);
+void	finish_dinner(t_arguments *arguments, t_philo *philo);
 
 //-----utils.c------
 
 int	check_args(t_arguments *arguments, char **argv);
 long long	ft_gettime(void);
+void		*ft_thread(void *);
+void		philo_sleep(long long time_to_eat, t_arguments *arguments);
 
 //-----philo_functions.c------
 

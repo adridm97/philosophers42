@@ -6,7 +6,7 @@
 /*   By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 11:03:08 by aduenas-          #+#    #+#             */
-/*   Updated: 2024/02/25 11:03:11 by aduenas-         ###   ########.fr       */
+/*   Updated: 2024/03/03 19:48:45 by aduenas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,5 @@ void  print_action(char *str, int id, t_arguments *args)
     printf("%i ", id);
     printf("%s\n", str);
   }
+  pthread_mutex_unlock(&(args->writing));
 }
