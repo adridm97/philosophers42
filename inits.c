@@ -6,7 +6,7 @@
 /*   By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 11:01:02 by aduenas-          #+#    #+#             */
-/*   Updated: 2024/03/03 21:48:27 by aduenas-         ###   ########.fr       */
+/*   Updated: 2024/03/04 20:43:47 by aduenas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ int	init_philosophers(t_arguments *args)
 	if (pthread_mutex_init(&args->writing, NULL))
 		return (1);
 	if (pthread_mutex_init(&args->meal, NULL))
+		return (1);
+	if(pthread_mutex_init(&args->dead, NULL))
 		return (1);
 	if (args->total_philos > 1)
 	{
@@ -71,24 +73,27 @@ void	death_checker(t_arguments *args, t_philo *philo)
 	while ((args->all_eat) == 0)
 	{
 		i = -1;
+		pthread_mutex_lock(&args->meal);
 		while(++i < args->total_philos && !(args->died))
 		{
-			pthread_mutex_lock(&args->meal);
 			if (ft_gettime() - philo[i].time_last_meal > args->time_to_die)
 			{
 				print_action("died", i, args);
 				args->died = 1;
 			}
-			pthread_mutex_unlock(&args->meal);
 			usleep(100);
 		}
 		if (args->died == 1)
+		{
+			pthread_mutex_unlock(&args->meal);
 			break ;
+		}
 		i = 0;
 		while (args->total_eat != -1 && i < args->total_philos && philo[i].number_of_eats == args->total_eat)
 			i++;
 		if (i == args->total_philos)
 			args->all_eat = 1;
+		pthread_mutex_unlock(&args->meal);
 	}
 }
 
@@ -103,4 +108,6 @@ void	finish_dinner(t_arguments *args, t_philo *philo)
 	while (++i < args->total_philos)
 		pthread_mutex_destroy(&philo->right_fork);
 	pthread_mutex_destroy(&(args->writing));
+	pthread_mutex_destroy(&args->meal);
+	pthread_mutex_destroy(&args->dead);
 }
