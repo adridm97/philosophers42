@@ -6,7 +6,7 @@
 /*   By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 11:03:20 by aduenas-          #+#    #+#             */
-/*   Updated: 2024/03/04 20:28:47 by aduenas-         ###   ########.fr       */
+/*   Updated: 2024/03/06 22:24:52 by aduenas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ typedef struct s_arguments
   pthread_mutex_t 	writing;
   pthread_mutex_t	meal;
   pthread_mutex_t	dead;
-  pthread_mutex_t totals;
+  pthread_mutex_t	totals;
   t_philo			*philos;
 }	t_arguments;
 

@@ -6,7 +6,7 @@
 /*   By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 11:00:58 by aduenas-          #+#    #+#             */
-/*   Updated: 2024/03/03 21:46:56 by aduenas-         ###   ########.fr       */
+/*   Updated: 2024/03/06 22:44:24 by aduenas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,21 @@ void	*ft_thread(void *philo)
 	t_arguments	*arguments;
 
 	philosopher = (t_philo *)philo;
-  arguments = philosopher->arguments;
+	arguments = philosopher->arguments;
 	if (philosopher->id % 2 == 0)
 		usleep(10000);
+	pthread_mutex_lock(&arguments->dead);
 	while (!arguments->died)
 	{
+		pthread_mutex_unlock(&arguments->dead);
 		philo_eat(philosopher);
+		pthread_mutex_lock(&arguments->totals);
+		philosopher->time_last_meal = ft_gettime();
+		pthread_mutex_unlock(&arguments->totals);
 		if (arguments->all_eat)
+		{
 			break ;
+		}
 		print_action("is sleeping", philosopher->id, arguments);
 		philo_sleep(arguments->time_to_sleep, arguments);
 		print_action("is thinking", philosopher->id, arguments);
@@ -67,10 +74,12 @@ void	philo_sleep(long long time, t_arguments *args)
 	long long	i;
 
 	i = ft_gettime();
+	pthread_mutex_lock(&args->dead);
 	while (!args->died)
 	{
 		if ((ft_gettime() - i) >= time)
 			break ;
 		usleep(50);
 	}
+	pthread_mutex_unlock(&args->dead);
 }

@@ -6,14 +6,14 @@
 #    By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/25 11:02:29 by aduenas-          #+#    #+#              #
-#    Updated: 2024/03/03 21:51:38 by aduenas-         ###   ########.fr        #
+#    Updated: 2024/03/06 20:14:11 by aduenas-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
 NAME = philo
 HEADER = philo.h
-CFLAGS = -Wall -Wextra -Werror -g 
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
 #-fsanitize=thread
 
 

@@ -6,7 +6,7 @@
 /*   By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 11:01:02 by aduenas-          #+#    #+#             */
-/*   Updated: 2024/03/04 20:43:47 by aduenas-         ###   ########.fr       */
+/*   Updated: 2024/03/06 22:42:14 by aduenas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,14 @@ int	start_threads(t_arguments *args)
 	{
 		if (pthread_create(&(args->philos[i].thread_id), NULL, ft_thread, &(args->philos[i])))
 			return (1);
+		pthread_mutex_lock(&args->meal);
 		args->philos[i].time_last_meal = ft_gettime();
+		pthread_mutex_unlock(&args->meal);
 		i++;
 	}
+	pthread_mutex_lock(&args->meal);
 	death_checker(args, args->philos);
+	pthread_mutex_unlock(&args->meal);
 	finish_dinner(args, args->philos);
 	return (0);
 }
@@ -74,15 +78,19 @@ void	death_checker(t_arguments *args, t_philo *philo)
 {
 	int	i;
 
+	pthread_mutex_lock(&args->totals);
 	while (!(args->all_eat))
 	{
 		i = -1;
+		
 		while(++i < args->total_philos && !(args->died))
 		{
 			if (ft_gettime() - philo[i].time_last_meal > args->time_to_die)
 			{
 				print_action("died", i, args);
+				pthread_mutex_lock(&args->dead);
 				args->died = 1;
+				pthread_mutex_unlock(&args->dead);
 			}
 			usleep(100);
 		}
@@ -94,8 +102,13 @@ void	death_checker(t_arguments *args, t_philo *philo)
 		while (args->total_eat != -1 && i < args->total_philos && philo[i].number_of_eats >= args->total_eat)
 			i++;
 		if (i == args->total_philos)
+		{
+			pthread_mutex_lock(&args->meal);
 			args->all_eat = 1;
+			pthread_mutex_unlock(&args->meal);
+		}
 	}
+	pthread_mutex_unlock(&args->totals);
 }
 
 void	finish_dinner(t_arguments *args, t_philo *philo)
