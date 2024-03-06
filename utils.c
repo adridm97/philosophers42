@@ -20,7 +20,7 @@ int check_args(t_arguments *arguments, char **argv)
   arguments->time_to_sleep = ft_atoi(argv[4]);
   arguments->died = 0;
   arguments->all_eat = 0;
-  if(arguments->total_philos < 1 || arguments->time_to_die < 0 || arguments->time_to_eat < 0 || arguments->time_to_sleep < 0)
+  if(arguments->total_philos < 2 || arguments->time_to_die < 0 || arguments->time_to_eat < 0 || arguments->time_to_sleep < 0)
     return (1);
   if (argv[5])
   {
@@ -50,7 +50,7 @@ void	*ft_thread(void *philo)
   arguments = philosopher->arguments;
 	if (philosopher->id % 2 == 0)
 		usleep(10000);
-	while (!arguments->died && arguments->total_eat)
+	while (!arguments->died)
 	{
 		philo_eat(philosopher);
 		if (arguments->all_eat)
@@ -67,12 +67,10 @@ void	philo_sleep(long long time, t_arguments *args)
 	long long	i;
 
 	i = ft_gettime();
-  pthread_mutex_lock(&args->dead);
 	while (!args->died)
 	{
 		if ((ft_gettime() - i) >= time)
 			break ;
 		usleep(50);
 	}
-  pthread_mutex_unlock(&args->dead);
 }

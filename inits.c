@@ -74,7 +74,7 @@ void	death_checker(t_arguments *args, t_philo *philo)
 {
 	int	i;
 
-	while ((args->all_eat) == 0)
+	while (!(args->all_eat))
 	{
 		i = -1;
 		while(++i < args->total_philos && !(args->died))
@@ -91,7 +91,7 @@ void	death_checker(t_arguments *args, t_philo *philo)
 			break ;
 		}
 		i = 0;
-		while (args->total_eat != -1 && i < args->total_philos && philo[i].number_of_eats == args->total_eat)
+		while (args->total_eat != -1 && i < args->total_philos && philo[i].number_of_eats >= args->total_eat)
 			i++;
 		if (i == args->total_philos)
 			args->all_eat = 1;
