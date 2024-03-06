@@ -67,10 +67,12 @@ void	philo_sleep(long long time, t_arguments *args)
 	long long	i;
 
 	i = ft_gettime();
+  pthread_mutex_lock(&args->dead);
 	while (!args->died)
 	{
 		if ((ft_gettime() - i) >= time)
 			break ;
 		usleep(50);
 	}
+  pthread_mutex_unlock(&args->dead);
 }

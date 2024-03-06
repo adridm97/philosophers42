@@ -23,8 +23,8 @@ void	philo_eat(t_philo *philo)
 	pthread_mutex_lock(&args->meal);
 	print_action("is eating", philo->id, args);
 	philo->time_last_meal = ft_gettime();
-	pthread_mutex_unlock(&args->meal);
 	philo_sleep(args->time_to_eat, args);
+	pthread_mutex_unlock(&args->meal);
 	philo->number_of_eats += 1;
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(&philo->right_fork);

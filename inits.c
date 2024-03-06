@@ -37,6 +37,8 @@ int	init_philosophers(t_arguments *args)
 		return (1);
 	if(pthread_mutex_init(&args->dead, NULL))
 		return (1);
+	if(pthread_mutex_init(&args->totals, NULL))
+		return (1);
 	if (args->total_philos > 1)
 	{
 		i = 0;
@@ -53,7 +55,9 @@ int	start_threads(t_arguments *args)
 	int	i;
 
 	i = 0;
+
 	args->first_timestamp = ft_gettime();
+
 	while (i < args->total_philos)
 	{
 		if (pthread_create(&(args->philos[i].thread_id), NULL, ft_thread, &(args->philos[i])))
@@ -73,7 +77,6 @@ void	death_checker(t_arguments *args, t_philo *philo)
 	while ((args->all_eat) == 0)
 	{
 		i = -1;
-		pthread_mutex_lock(&args->meal);
 		while(++i < args->total_philos && !(args->died))
 		{
 			if (ft_gettime() - philo[i].time_last_meal > args->time_to_die)
@@ -85,7 +88,6 @@ void	death_checker(t_arguments *args, t_philo *philo)
 		}
 		if (args->died == 1)
 		{
-			pthread_mutex_unlock(&args->meal);
 			break ;
 		}
 		i = 0;
@@ -93,7 +95,6 @@ void	death_checker(t_arguments *args, t_philo *philo)
 			i++;
 		if (i == args->total_philos)
 			args->all_eat = 1;
-		pthread_mutex_unlock(&args->meal);
 	}
 }
 
@@ -110,4 +111,5 @@ void	finish_dinner(t_arguments *args, t_philo *philo)
 	pthread_mutex_destroy(&(args->writing));
 	pthread_mutex_destroy(&args->meal);
 	pthread_mutex_destroy(&args->dead);
+	pthread_mutex_destroy(&args->totals);
 }

@@ -43,6 +43,7 @@ typedef struct s_arguments
   pthread_mutex_t 	writing;
   pthread_mutex_t	meal;
   pthread_mutex_t	dead;
+  pthread_mutex_t totals;
   t_philo			*philos;
 }	t_arguments;
 
