@@ -14,23 +14,27 @@
 
 int check_args(t_arguments *arguments, char **argv)
 {
-  arguments->total_philos = ft_atoi(argv[1]);
-  arguments->time_to_die = ft_atoi(argv[2]);
-  arguments->time_to_eat = ft_atoi(argv[3]);
-  arguments->time_to_sleep = ft_atoi(argv[4]);
-  arguments->died = 0;
-  arguments->all_eat = 0;
-  if(arguments->total_philos < 2 || arguments->time_to_die < 0 || arguments->time_to_eat < 0 || arguments->time_to_sleep < 0)
-    return (1);
-  if (argv[5])
-  {
-    arguments->total_eat = ft_atoi(argv[5]);
-    if (arguments->total_eat <= 0)
-      return (1);
-  }
-  else
-	  arguments->total_eat = -1;
-  return (0);
+  	arguments->total_philos = ft_atoi(argv[1]);
+  	arguments->time_to_die = ft_atoi(argv[2]);
+  	arguments->time_to_eat = ft_atoi(argv[3]);
+  	arguments->time_to_sleep = ft_atoi(argv[4]);
+  	arguments->dead = 0;
+	arguments->total_eat = -1;
+	if(arguments->total_philos < 2 || arguments->time_to_die < 0 || arguments->time_to_eat < 0 || arguments->time_to_sleep < 0)
+	return (1);
+	if (argv[5])
+	{
+		arguments->total_eat = ft_atoi(argv[5]);
+	}
+	arguments->first_timestamp = ft_gettime();
+	arguments->dead = false;
+	pthread_mutex_init(&arguments->writing, NULL);
+	pthread_mutex_init(&arguments->meal_mutex, NULL);
+	pthread_mutex_init(&arguments->dead_mutex, NULL);
+	pthread_mutex_init(&arguments->time_mutex, NULL);
+	if(allocate(arguments) == 1)
+		return (1);
+	return (0);
 }
 
 long long	ft_gettime(void)
@@ -44,27 +48,18 @@ long long	ft_gettime(void)
 void	*ft_thread(void *philo)
 {
 	t_philo	*philosopher;
-	t_arguments	*arguments;
 
 	philosopher = (t_philo *)philo;
-	arguments = philosopher->arguments;
 	if (philosopher->id % 2 == 0)
-		usleep(10000);
-	pthread_mutex_lock(&arguments->dead);
-	while (!arguments->died)
+		usleep(100);
+	while (get_end(philosopher->arguments) == false)
 	{
-		pthread_mutex_unlock(&arguments->dead);
 		philo_eat(philosopher);
-		pthread_mutex_lock(&arguments->totals);
-		philosopher->time_last_meal = ft_gettime();
-		pthread_mutex_unlock(&arguments->totals);
-		if (arguments->all_eat)
-		{
+		if (get_end(philosopher->arguments) == true)
 			break ;
-		}
-		print_action("is sleeping", philosopher->id, arguments);
-		philo_sleep(arguments->time_to_sleep, arguments);
-		print_action("is thinking", philosopher->id, arguments);
+		print_action("is sleeping", philosopher->id, philosopher->arguments);
+		philo_sleep(philosopher->arguments->time_to_sleep, philosopher->arguments);
+		print_action("is thinking", philosopher->id, philosopher->arguments);
 	}
   return (NULL);
 }
@@ -74,12 +69,27 @@ void	philo_sleep(long long time, t_arguments *args)
 	long long	i;
 
 	i = ft_gettime();
-	pthread_mutex_lock(&args->dead);
-	while (!args->died)
+	while (!args->dead)
 	{
-		if ((ft_gettime() - i) >= time)
+		if ((ft_gettime() - i) < time)
 			break ;
-		usleep(50);
+		usleep(100);
 	}
-	pthread_mutex_unlock(&args->dead);
+}
+
+int allocate(t_arguments *args)
+{
+	args->forks_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * args->total_philos);
+	if (!args->forks_mutex)
+	{
+		finish_dinner(args);
+		return (1);
+	}
+	args->philos = (t_philo *)malloc(sizeof(t_philo) * args->total_philos);
+	if (!args->philos)
+	{
+		finish_dinner(args);
+		return (1);
+	}
+	return (0);
 }

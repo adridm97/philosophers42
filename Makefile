@@ -14,10 +14,11 @@ CC = gcc
 NAME = philo
 HEADER = philo.h
 CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
-#-fsanitize=thread
+#-fsanitize=address
 
 
-SRC = main.c inits.c utils.c ft_functions.c philo_functions.c
+SRC = main.c inits.c utils.c ft_functions.c philo_functions.c \
+	getters.c
 
 OBJS = ${SRC:.c=.o}
 

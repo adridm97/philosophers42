@@ -40,11 +40,20 @@ int ft_atoi(char *str)
 void	print_action(char *str, int id, t_arguments *args)
 {
 	pthread_mutex_lock(&args->writing);
-	if (!(args->died))
+	if (!(args->dead))
 	{
 		printf("%lli ", ft_gettime() - args->first_timestamp);
 		printf("%i ", id);
 		printf("%s\n", str);
 	}
 	pthread_mutex_unlock(&args->writing);
+}
+
+int	ft_clear(t_arguments *args)
+{
+	if (args->forks_mutex)
+		free(args->forks_mutex);
+	if (args->philos)
+		free(args->philos);
+	return (0);
 }

@@ -15,6 +15,7 @@
 int main(int argc, char **argv)
 {
   t_arguments arguments;
+
   if(argc != 5 && argc != 6)
   {
     printf("Error with number of arguments, valid 4 or 5.\n");
@@ -27,6 +28,7 @@ int main(int argc, char **argv)
   }
   if (init_philosophers(&arguments) == 1)
 	  return (1);
+  init_forks(&arguments);
   if(start_threads(&arguments) == 1)
 	  return (1);
 }
