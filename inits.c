@@ -6,7 +6,7 @@
 /*   By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 11:01:02 by aduenas-          #+#    #+#             */
-/*   Updated: 2024/03/06 22:42:14 by aduenas-         ###   ########.fr       */
+/*   Updated: 2024/03/10 23:46:44 by aduenas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	init_philosophers(t_arguments *args)
 		args->philos[i].time_last_meal = args->first_timestamp;
 		args->philos[i].right_fork = NULL;
 		args->philos[i].left_fork = NULL;
-		pthread_mutex_init(args->philos[i].time_eat_mutex, NULL);
+		pthread_mutex_init(&args->philos[i].time_eat_mutex, NULL);
 		args->philos[i].arguments = args;
 	}
 	return (0);
@@ -80,20 +80,21 @@ void	death_checker(t_arguments *args)
 	while (get_end(args) == false)
 	{
 		i = 0;
-		while(++i < args->total_philos && get_end(args) == false)
+		while(i < get_total_philo(args) && get_end(args) == false)
 		{
-			if (ft_gettime() - args->philos[i].time_last_meal > args->time_to_die)
+			if (ft_gettime() - args->philos[i].time_last_meal > args->time_to_die || get_end(args) == true)
 			{
-				print_action("died", i, args);
+				print_action("died", args->philos[i].id, args);
 				set_finish(args);
 			}
-			usleep(100);
+			i++;
 		}
 		if (get_end(args) == true)
 		{
 			break ;
 		}
 		check_full(args);
+		philo_sleep(args->time_to_die, args);
 	}
 }
 

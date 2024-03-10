@@ -6,7 +6,7 @@
 /*   By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 11:00:58 by aduenas-          #+#    #+#             */
-/*   Updated: 2024/03/06 22:44:24 by aduenas-         ###   ########.fr       */
+/*   Updated: 2024/03/10 23:37:04 by aduenas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,11 @@ void	*ft_thread(void *philo)
 	while (get_end(philosopher->arguments) == false)
 	{
 		philo_eat(philosopher);
-		if (get_end(philosopher->arguments) == true)
-			break ;
 		print_action("is sleeping", philosopher->id, philosopher->arguments);
 		philo_sleep(philosopher->arguments->time_to_sleep, philosopher->arguments);
 		print_action("is thinking", philosopher->id, philosopher->arguments);
+		if (get_end(philosopher->arguments) == true)
+			break ;
 	}
   return (NULL);
 }
@@ -69,7 +69,7 @@ void	philo_sleep(long long time, t_arguments *args)
 	long long	i;
 
 	i = ft_gettime();
-	while (!args->dead)
+	while (get_end(args))
 	{
 		if ((ft_gettime() - i) < time)
 			break ;

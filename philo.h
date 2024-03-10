@@ -6,7 +6,7 @@
 /*   By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 11:03:20 by aduenas-          #+#    #+#             */
-/*   Updated: 2024/03/06 22:24:52 by aduenas-         ###   ########.fr       */
+/*   Updated: 2024/03/10 23:34:53 by aduenas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ typedef struct s_philo
   long					  time_last_meal;
   pthread_mutex_t	*right_fork;
   pthread_mutex_t *left_fork;
-  pthread_mutex_t *time_eat_mutex;
+  pthread_mutex_t time_eat_mutex;
   t_arguments		  *arguments;
   pthread_t		    thread_id;
 }	t_philo;
@@ -95,6 +95,7 @@ int   ft_clear(t_arguments *arguments);
 int get_total_philo(t_arguments *arguments);
 int get_end(t_arguments *arguments);
 int get_total_eats(t_arguments *arguments);
+int get_time_last_meal(t_philo *philo);
 
 //-----setters.c---------
 

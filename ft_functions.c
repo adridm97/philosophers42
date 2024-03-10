@@ -6,7 +6,7 @@
 /*   By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 11:03:08 by aduenas-          #+#    #+#             */
-/*   Updated: 2024/03/06 19:51:52 by aduenas-         ###   ########.fr       */
+/*   Updated: 2024/03/10 23:25:06 by aduenas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int ft_atoi(char *str)
 void	print_action(char *str, int id, t_arguments *args)
 {
 	pthread_mutex_lock(&args->writing);
-	if (!(args->dead))
+	if (get_end(args) == false)
 	{
 		printf("%lli ", ft_gettime() - args->first_timestamp);
 		printf("%i ", id);
