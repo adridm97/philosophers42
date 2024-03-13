@@ -29,6 +29,11 @@ int main(int argc, char **argv)
   if (init_philosophers(&arguments) == 1)
 	  return (1);
   init_forks(&arguments);
+  if (arguments.total_philos == 1)
+  {
+    if (single_philo(&arguments) == 1)
+      return (1);
+  }
   if(start_threads(&arguments) == 1)
 	  return (1);
 }

@@ -49,9 +49,9 @@ typedef struct s_philo
 typedef struct s_arguments
 {
   int				total_philos;
-  int				time_to_eat;
-  int				time_to_die;
-  int				time_to_sleep;
+  long				time_to_eat;
+  long				time_to_die;
+  long				time_to_sleep;
   bool			dead;
   int				total_eat;
   long long			first_timestamp;
@@ -96,6 +96,7 @@ int get_total_philo(t_arguments *arguments);
 int get_end(t_arguments *arguments);
 int get_total_eats(t_arguments *arguments);
 int get_time_last_meal(t_philo *philo);
+long	get_time_to_die(t_arguments *args);
 
 //-----setters.c---------
 

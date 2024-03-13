@@ -20,7 +20,7 @@ int check_args(t_arguments *arguments, char **argv)
   	arguments->time_to_sleep = ft_atoi(argv[4]);
   	arguments->dead = 0;
 	arguments->total_eat = -1;
-	if(arguments->total_philos < 2 || arguments->time_to_die < 0 || arguments->time_to_eat < 0 || arguments->time_to_sleep < 0)
+	if(arguments->total_philos < 1 || arguments->time_to_die < 0 || arguments->time_to_eat < 0 || arguments->time_to_sleep < 0)
 	return (1);
 	if (argv[5])
 	{
@@ -69,9 +69,9 @@ void	philo_sleep(long long time, t_arguments *args)
 	long long	i;
 
 	i = ft_gettime();
-	while (get_end(args))
+	while (!get_end(args))
 	{
-		if ((ft_gettime() - i) < time)
+		if ((ft_gettime() - i) >= time)
 			break ;
 		usleep(100);
 	}

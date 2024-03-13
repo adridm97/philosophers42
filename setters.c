@@ -17,6 +17,6 @@ void    set_finish(t_arguments *args)
 
     finish = true;
     pthread_mutex_lock(&args->dead_mutex);
-    args->dead = true;
+    args->dead = finish;
     pthread_mutex_unlock(&args->dead_mutex);
 }

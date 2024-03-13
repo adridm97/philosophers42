@@ -66,9 +66,8 @@ int	start_threads(t_arguments *args)
 	}
 	death_checker(args);
 	i = -1;
-	while (++i < get_total_philo(args))
+	while (++i < args->total_philos)
 		pthread_join(args->philos[i].thread_id, NULL);
-	
 	finish_dinner(args);
 	return (0);
 }
@@ -82,10 +81,11 @@ void	death_checker(t_arguments *args)
 		i = 0;
 		while(i < get_total_philo(args) && get_end(args) == false)
 		{
-			if (ft_gettime() - args->philos[i].time_last_meal > args->time_to_die || get_end(args) == true)
+			if (ft_gettime() - args->philos[i].time_last_meal >= get_time_to_die(args) || get_end(args) == true)
 			{
 				print_action("died", args->philos[i].id, args);
 				set_finish(args);
+				break ;
 			}
 			i++;
 		}
@@ -102,9 +102,6 @@ void	finish_dinner(t_arguments *args)
 {
 	int	i;
 
-	i = -1;
-	while (++i < args->total_philos)
-		pthread_join(args->philos[i].thread_id, NULL);
 	i = -1;
 	while (++i < args->total_philos)
 		pthread_mutex_destroy(&args->forks_mutex[i]);
