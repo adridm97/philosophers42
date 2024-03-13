@@ -6,7 +6,7 @@
 /*   By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 11:01:02 by aduenas-          #+#    #+#             */
-/*   Updated: 2024/03/10 23:46:44 by aduenas-         ###   ########.fr       */
+/*   Updated: 2024/03/13 23:40:53 by aduenas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	init_philosophers(t_arguments *args)
 		args->philos[i].id = i + 1;
 		args->philos[i].time_to_die = args->time_to_die;
 		args->philos[i].time_eats = 0;
-		args->philos[i].meal_finished = false;
+		args->philos[i].meal_finished = 0;
 		args->philos[i].time_last_meal = args->first_timestamp;
 		args->philos[i].right_fork = NULL;
 		args->philos[i].left_fork = NULL;
@@ -46,11 +46,32 @@ void	init_forks(t_arguments *args)
 	while (++i < args->total_philos)
 	{
 		if (i == 0)
-			args->philos[i].right_fork = &args->forks_mutex[args->total_philos - 1];
+			args->philos[i].right_fork \
+				= &args->forks_mutex[args->total_philos - 1];
 		else
 			args->philos[i].right_fork = &args->forks_mutex[i - 1];
 		args->philos[i].left_fork = &args->forks_mutex[i % args->total_philos];
 	}
+}
+
+void	*ft_thread(void *philo)
+{
+	t_philo	*philosopher;
+
+	philosopher = (t_philo *)philo;
+	if (philosopher->id % 2 == 0)
+		philo_sleep(500);
+	while (get_end(philosopher->arguments) == 0)
+	{
+		take_forks(philosopher);
+		philo_eat(philosopher);
+		print_action("is sleeping", philosopher->id, philosopher->arguments);
+		philo_sleep(philosopher->arguments->time_to_sleep);
+		print_action("is thinking", philosopher->id, philosopher->arguments);
+		if (get_end(philosopher->arguments) == 0)
+			break ;
+	}
+	return (NULL);
 }
 
 int	start_threads(t_arguments *args)
@@ -62,40 +83,15 @@ int	start_threads(t_arguments *args)
 	while (++i < get_total_philo(args))
 	{
 		args->philos[i].time_last_meal = ft_gettime();
-		pthread_create(&(args->philos[i].thread_id), NULL, ft_thread, &args->philos[i]);
+		pthread_create(&(args->philos[i].thread_id), \
+				NULL, ft_thread, &args->philos[i]);
 	}
 	death_checker(args);
 	i = -1;
 	while (++i < args->total_philos)
 		pthread_join(args->philos[i].thread_id, NULL);
 	finish_dinner(args);
-	return (0);
-}
-
-void	death_checker(t_arguments *args)
-{
-	int	i;
-
-	while (get_end(args) == false)
-	{
-		i = 0;
-		while(i < get_total_philo(args) && get_end(args) == false)
-		{
-			if (ft_gettime() - args->philos[i].time_last_meal >= get_time_to_die(args) || get_end(args) == true)
-			{
-				print_action("died", args->philos[i].id, args);
-				set_finish(args);
-				break ;
-			}
-			i++;
-		}
-		if (get_end(args) == true)
-		{
-			break ;
-		}
-		check_full(args);
-		philo_sleep(args->time_to_die, args);
-	}
+	return (1);
 }
 
 void	finish_dinner(t_arguments *args)
