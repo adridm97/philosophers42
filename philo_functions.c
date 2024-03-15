@@ -26,7 +26,7 @@ void	philo_eat(t_philo *philo)
 
 	args = philo->arguments;
 	print_action("is eating", philo->id, args);
-//	philo_sleep(args->time_to_eat);
+	philo_sleep(args->time_to_eat, args);
 	philo->time_eats++;
 	if (philo->time_eats == get_total_eats(args))
 		set_finish_meal(philo);
@@ -68,7 +68,7 @@ int	single_philo(t_arguments *args)
 {
 	args->first_timestamp = ft_gettime();
 	print_action("has taken a fork", 1, args);
-	philo_sleep(args->time_to_die);
+	philo_sleep(args->time_to_die, args);
 	print_action("is dead", 1, args);
 	finish_dinner(args);
 	ft_clear(args);

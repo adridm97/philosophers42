@@ -13,7 +13,7 @@
 CC = gcc
 NAME = philo
 HEADER = philo.h
-CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
 #-fsanitize=address
 
 

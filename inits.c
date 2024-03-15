@@ -29,7 +29,6 @@ int	init_philosophers(t_arguments *args)
 		args->philos[i].time_last_meal = args->first_timestamp;
 		args->philos[i].right_fork = NULL;
 		args->philos[i].left_fork = NULL;
-		pthread_mutex_init(&args->philos[i].time_eat_mutex, NULL);
 		args->philos[i].arguments = args;
 	}
 	return (0);
@@ -60,16 +59,16 @@ void	*ft_thread(void *philo)
 
 	philosopher = (t_philo *)philo;
 	if (philosopher->id % 2 == 0)
-		philo_sleep(500);
+		philo_sleep(philosopher->arguments->time_to_eat, philosopher->arguments);
 	while (get_end(philosopher->arguments) == 0)
 	{
 		take_forks(philosopher);
 		philo_eat(philosopher);
-		print_action("is sleeping", philosopher->id, philosopher->arguments);
-		philo_sleep(philosopher->arguments->time_to_sleep);
-		print_action("is thinking", philosopher->id, philosopher->arguments);
-		if (get_end(philosopher->arguments) == 0)
+		if (get_end(philosopher->arguments) == 1)
 			break ;
+		print_action("is sleeping", philosopher->id, philosopher->arguments);
+		philo_sleep(philosopher->arguments->time_to_sleep, philosopher->arguments);
+		print_action("is thinking", philosopher->id, philosopher->arguments);
 	}
 	return (NULL);
 }
@@ -82,13 +81,13 @@ int	start_threads(t_arguments *args)
 	args->first_timestamp = ft_gettime();
 	while (++i < get_total_philo(args))
 	{
-		args->philos[i].time_last_meal = ft_gettime();
-		pthread_create(&(args->philos[i].thread_id), \
+		args->philos[i].time_last_meal = args->first_timestamp;
+		pthread_create(&args->philos[i].thread_id, \
 				NULL, ft_thread, &args->philos[i]);
 	}
 	death_checker(args);
 	i = -1;
-	while (++i < args->total_philos)
+	while (++i < get_total_philo(args))
 		pthread_join(args->philos[i].thread_id, NULL);
 	finish_dinner(args);
 	return (1);
@@ -99,10 +98,11 @@ void	finish_dinner(t_arguments *args)
 	int	i;
 
 	i = -1;
-	while (++i < args->total_philos)
-		pthread_mutex_destroy(&args->forks_mutex[i]);
-	pthread_mutex_destroy(&(args->writing));
-	pthread_mutex_destroy(&args->meal_mutex);
-	pthread_mutex_destroy(&args->dead_mutex);
-	pthread_mutex_destroy(&args->time_mutex);
+	if (args)
+		while (++i < args->total_philos)
+			pthread_mutex_destroy(&args->forks_mutex[i]);
+		pthread_mutex_destroy(&(args->writing));
+		pthread_mutex_destroy(&args->fin_meal_mutex);
+		pthread_mutex_destroy(&args->dead_mutex);
+		pthread_mutex_destroy(&args->time_mutex);
 }

@@ -38,14 +38,14 @@ typedef struct s_philo
 typedef struct s_arguments
 {
 	int				total_philos;
+  	long			time_to_die;
 	long			time_to_eat;
-	long			time_to_die;
 	long			time_to_sleep;
-	int				dead;
 	int				total_eat;
+  int				dead;
 	long long		first_timestamp;
 	pthread_mutex_t	writing;
-	pthread_mutex_t	meal_mutex;
+	pthread_mutex_t	fin_meal_mutex;
 	pthread_mutex_t	dead_mutex;
 	pthread_mutex_t	time_mutex;
 	pthread_mutex_t	*forks_mutex;
@@ -63,7 +63,7 @@ void	finish_dinner(t_arguments *arguments);
 
 int		check_args(t_arguments *arguments, char **argv);
 long	ft_gettime(void);
-void	philo_sleep(unsigned long time_to_eat);
+void	philo_sleep(unsigned long time_to_eat, t_arguments *arguments);
 int		allocate(t_arguments *arguments);
 void	death_checker(t_arguments *arguments);
 

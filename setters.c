@@ -17,9 +17,9 @@ void	set_finish_meal(t_philo *philo)
 	int	finished;
 
 	finished = 1;
-	pthread_mutex_lock(&philo->arguments->dead_mutex);
+	pthread_mutex_lock(&philo->arguments->fin_meal_mutex);
 	philo->meal_finished = finished;
-	pthread_mutex_unlock(&philo->arguments->dead_mutex);
+	pthread_mutex_unlock(&philo->arguments->fin_meal_mutex);
 }
 
 void	set_finish(t_arguments *args)

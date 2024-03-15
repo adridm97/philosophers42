@@ -25,7 +25,7 @@ int	check_args(t_arguments *arguments, char **argv)
 	arguments->first_timestamp = ft_gettime();
 	arguments->dead = 0;
 	pthread_mutex_init(&arguments->writing, NULL);
-	pthread_mutex_init(&arguments->meal_mutex, NULL);
+	pthread_mutex_init(&arguments->fin_meal_mutex, NULL);
 	pthread_mutex_init(&arguments->dead_mutex, NULL);
 	pthread_mutex_init(&arguments->time_mutex, NULL);
 	if (allocate(arguments) == 1)
@@ -41,13 +41,17 @@ long	ft_gettime(void)
 	return ((t.tv_sec * 1000) + (t.tv_usec / 1000));
 }
 
-void	philo_sleep(unsigned long time)
+void	philo_sleep(unsigned long time, t_arguments *args)
 {
 	unsigned long	start;
 
 	start = ft_gettime();
-	while ((ft_gettime() - start) < time)
+	while (get_end(args) == 0)
+	{
+		if (ft_gettime() - start >= time)
+			break ;
 		usleep(50);
+	}
 }
 
 int	allocate(t_arguments *args)
@@ -82,6 +86,6 @@ void	death_checker(t_arguments *args)
 			i++;
 		}
 		check_full(args);
-		philo_sleep(args->time_to_die);
+		philo_sleep(args->time_to_die, args);
 	}
 }

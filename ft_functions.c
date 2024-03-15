@@ -47,9 +47,10 @@ void	print_action(char *str, int id, t_arguments *args)
 	pthread_mutex_unlock(&args->time_mutex);
 	i = ft_gettime() - start;
 	pthread_mutex_lock(&args->writing);
-	printf("%lli ", i);
-	printf("%i ", id);
-	printf("%s\n", str);
+	if (get_end(args) == 0)
+		printf("%lli %i %s\n", i, id, str);
+	else
+		printf("%lli %i %s\n", i, id, str);
 	pthread_mutex_unlock(&args->writing);
 }
 

@@ -22,6 +22,16 @@ int	get_total_philo(t_arguments *args)
 	return (total);
 }
 
+long	get_time_to_die(t_arguments *args)
+{
+	long	time;
+
+	pthread_mutex_lock(&args->fin_meal_mutex);
+	time = args->time_to_die;
+	pthread_mutex_unlock(&args->fin_meal_mutex);
+	return (time);
+}
+
 int	get_end(t_arguments *args)
 {
 	int	finish;
@@ -36,28 +46,8 @@ int	get_total_eats(t_arguments *args)
 {
 	int	total;
 
-	pthread_mutex_lock(&args->meal_mutex);
+	pthread_mutex_lock(&args->fin_meal_mutex);
 	total = args->total_eat;
-	pthread_mutex_unlock(&args->meal_mutex);
+	pthread_mutex_unlock(&args->fin_meal_mutex);
 	return (total);
-}
-
-int	get_time_last_meal(t_philo *philo)
-{
-	long	time;
-
-	pthread_mutex_lock(&philo->time_eat_mutex);
-	time = philo->time_last_meal;
-	pthread_mutex_unlock(&philo->time_eat_mutex);
-	return (time);
-}
-
-long	get_time_to_die(t_arguments *args)
-{
-	long	time;
-
-	pthread_mutex_lock(&args->time_mutex);
-	time = args->time_to_die;
-	pthread_mutex_unlock(&args->time_mutex);
-	return (time);
 }
