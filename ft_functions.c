@@ -6,7 +6,7 @@
 /*   By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 11:03:08 by aduenas-          #+#    #+#             */
-/*   Updated: 2024/03/13 23:49:52 by aduenas-         ###   ########.fr       */
+/*   Updated: 2024/03/16 13:42:17 by aduenas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	print_action(char *str, int id, t_arguments *args)
 	if (get_end(args) == 0)
 		printf("%lli %i %s\n", i, id, str);
 	else
-		printf("%lli %i %s\n", i, id, str);
+		printf(" %lli %i %s\n", i, id, str);
 	pthread_mutex_unlock(&args->writing);
 }
 

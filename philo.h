@@ -6,7 +6,7 @@
 /*   By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 11:03:20 by aduenas-          #+#    #+#             */
-/*   Updated: 2024/03/13 23:12:17 by aduenas-         ###   ########.fr       */
+/*   Updated: 2024/03/16 13:36:44 by aduenas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,11 @@ typedef struct s_philo
 typedef struct s_arguments
 {
 	int				total_philos;
-  	long			time_to_die;
+	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
 	int				total_eat;
-  int				dead;
+	int				dead;
 	long long		first_timestamp;
 	pthread_mutex_t	writing;
 	pthread_mutex_t	fin_meal_mutex;
@@ -72,8 +72,8 @@ void	death_checker(t_arguments *arguments);
 void	philo_eat(t_philo *philo);
 void	check_full(t_arguments *arguments);
 int		single_philo(t_arguments *arguments);
-void    drop_fork(t_philo *philo);
-void    take_forks(t_philo *philo);
+void	drop_fork(t_philo *philo);
+void	take_forks(t_philo *philo);
 
 //-----ft_functions.c-------
 

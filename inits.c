@@ -6,7 +6,7 @@
 /*   By: aduenas- <aduenas-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 11:01:02 by aduenas-          #+#    #+#             */
-/*   Updated: 2024/03/13 23:40:53 by aduenas-         ###   ########.fr       */
+/*   Updated: 2024/03/16 13:47:13 by aduenas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,16 +59,18 @@ void	*ft_thread(void *philo)
 
 	philosopher = (t_philo *)philo;
 	if (philosopher->id % 2 == 0)
-		philo_sleep(philosopher->arguments->time_to_eat, philosopher->arguments);
+		philo_sleep(philosopher->arguments->time_to_eat, \
+				philosopher->arguments);
 	while (get_end(philosopher->arguments) == 0)
 	{
 		take_forks(philosopher);
 		philo_eat(philosopher);
+		print_action("is sleeping", philosopher->id, philosopher->arguments);
+		philo_sleep(philosopher->arguments->time_to_sleep, \
+				philosopher->arguments);
+		print_action("is thinking", philosopher->id, philosopher->arguments);
 		if (get_end(philosopher->arguments) == 1)
 			break ;
-		print_action("is sleeping", philosopher->id, philosopher->arguments);
-		philo_sleep(philosopher->arguments->time_to_sleep, philosopher->arguments);
-		print_action("is thinking", philosopher->id, philosopher->arguments);
 	}
 	return (NULL);
 }
@@ -101,8 +103,8 @@ void	finish_dinner(t_arguments *args)
 	if (args)
 		while (++i < args->total_philos)
 			pthread_mutex_destroy(&args->forks_mutex[i]);
-		pthread_mutex_destroy(&(args->writing));
-		pthread_mutex_destroy(&args->fin_meal_mutex);
-		pthread_mutex_destroy(&args->dead_mutex);
-		pthread_mutex_destroy(&args->time_mutex);
+	pthread_mutex_destroy(&(args->writing));
+	pthread_mutex_destroy(&args->fin_meal_mutex);
+	pthread_mutex_destroy(&args->dead_mutex);
+	pthread_mutex_destroy(&args->time_mutex);
 }
